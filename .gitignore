@@ -1,2 +1,2 @@
-Servidor/build/*
-Cliente/build/*
+./Servidor/build/*
+./Cliente/build/*
