@@ -5,11 +5,13 @@
  */
 package com.sd.app.service;
 
-import com.sd.app.bean.ChatMessage;
-import com.sd.app.bean.ChatMessage.Action;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -18,6 +20,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sd.app.bean.ChatMessage;
+import com.sd.app.bean.ChatMessage.Action;
 
 /**
  *
@@ -28,9 +33,10 @@ public class ServidorService {
     private ServerSocket serverSocket;
     private Socket socket;
     private Map<String, ObjectOutputStream> mapOnlines = new HashMap<String, ObjectOutputStream>();
-
+    private static final Integer PORT = 2000;
+    
     public ServidorService() throws IOException {
-        serverSocket = new ServerSocket(2000);
+        serverSocket = new ServerSocket(PORT);
 
         System.out.println("Servidor online");
 
@@ -130,6 +136,7 @@ public class ServidorService {
             if (ky.getKey().equals(message.getNameReserved())) {
                 try {
                     ky.getValue().writeObject(message);
+                    this.saveHistory(message);
                 } catch (IOException ex) {
                     Logger.getLogger(ServidorService.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -148,6 +155,7 @@ public class ServidorService {
                 message.setAction(Action.SEND_ONE);
                 try {
                     ky.getValue().writeObject(message);
+                    this.saveHistory(message);
                 } catch (IOException ex) {
                     Logger.getLogger(ServidorService.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -175,5 +183,32 @@ public class ServidorService {
                 Logger.getLogger(ServidorService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    private boolean writeFile(String host, String ipAddress, Integer port, String text) {
+    	Writer writer = null;
+    	String Log = "<"+host+">@<"+ipAddress+">@<"+PORT+">#<"+text+">";
+
+    	try {
+    	    writer = new BufferedWriter(new OutputStreamWriter(
+    	          new FileOutputStream("history.txt"), "utf-8"));
+    	    
+    	    writer.write(Log + "\n");
+    	    return true;
+    	} catch (IOException ex) {
+    	    return false;
+    	} finally {
+    	   try {writer.close();} catch (Exception ex) {return true;}
+    	}
+    }
+    
+    private void saveHistory(ChatMessage message) {
+    	System.out.println("Salvando arquivo de histórico...");
+    	String host = message.getHost();
+    	String ipAddress = message.getIpAddress();
+    	String text = message.getText();
+    	
+    	if(writeFile(host, ipAddress, PORT, text)) System.out.println("Salvo com sucesso!");
+    	else System.out.println("Algo de errado aconteceu ao salvar o histórico");
     }
 }
