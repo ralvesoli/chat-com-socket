@@ -302,8 +302,6 @@ public class ClienteFrame extends javax.swing.JFrame {
             this.message = new ChatMessage();
             this.message.setAction(Action.CONNECT);
             this.message.setName(name);
-            this.message.setHost(socket.getInetAddress().getHostName());
-            this.message.setIpAddress(socket.getInetAddress().getHostAddress());
 
             try {
                 this.service = new ClienteService();
@@ -324,8 +322,6 @@ public class ClienteFrame extends javax.swing.JFrame {
         ChatMessage message = new ChatMessage();
         message.setName(this.message.getName());
         message.setAction(Action.DISCONNECT);
-        message.setHost(socket.getInetAddress().getHostName());
-        message.setIpAddress(socket.getInetAddress().getHostAddress());
         try {
             this.service.send(message);
         } catch (IOException ex) {
@@ -343,8 +339,6 @@ public class ClienteFrame extends javax.swing.JFrame {
         String name = this.message.getName();
         if (!text.isEmpty()) {
             this.message = new ChatMessage();
-            this.message.setHost(socket.getInetAddress().getHostName());
-            this.message.setIpAddress(socket.getInetAddress().getHostAddress());
 
             if (this.listOnlines.getSelectedIndex() > -1) {
                 this.message.setNameReserved(this.listOnlines.getSelectedValue());
