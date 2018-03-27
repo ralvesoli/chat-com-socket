@@ -6,7 +6,6 @@
 package com.sd.app.bean;
 
 import java.io.Serializable;
-import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,35 +17,7 @@ public class ChatMessage implements Serializable {
     private String name;
     private String text;
     private String nameReserved;
-    private String host;
-    private String ipAddress;
-    private Integer serverPort;
-    
-    public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	public String getIpAddress() {
-		return ipAddress;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
-	}
-
-	public Integer getServerPort() {
-		return serverPort;
-	}
-
-	public void setServerPort(Integer serverPort) {
-		this.serverPort = serverPort;
-	}
-
-	private Set<String> setOnlines = new HashSet<String>();
+    private Set<String> setOnlines = new HashSet<String>();
     private Action action;
 
     public String getName() {
